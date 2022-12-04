@@ -16,7 +16,7 @@ class myProcessor(MediaHandler.Processor):
                    fpath_files: List[str], \
                    fpath_dst: str, \
                    **kwargs
-    ):
+    ) -> dict:
         if process_name == "files":
             return dict(status = "OK")
 
@@ -26,7 +26,7 @@ class myProcessor(MediaHandler.Processor):
                   fpath_org: str, \
                   fpath_dst: str, \
                   **kwargs
-    ):
+    ) -> dict:
         
         if process_name == "image":
             img = Image.open(fpath_org).convert('L')

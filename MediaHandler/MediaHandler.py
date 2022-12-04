@@ -19,8 +19,8 @@ class Config():
 
         print("kwargs: ", kwargs)
         self.path_data = kwargs["PATH_DATA"] if "PATH_DATA" in kwargs.keys() else "./temp"
-        self.image_extensions = ["jpg", "png", "tiff"]
-        self.video_extensions = ["mp4", "avi", "webm", "wmv", "flv"]
+        self.image_extensions = kwargs["EXTENSIONS_IMAGE"] if "EXTENSIONS_IMAGE" in kwargs.keys() else ["jpg", "png", "tiff"]
+        self.video_extensions = kwargs["EXTENSIONS_VIDEO"] if "EXTENSIONS_VIDEO" in kwargs.keys() else ["mp4", "avi", "webm", "wmv", "flv"]
         # self.sleep_sec_remove = _config.SLEEP_SEC_REMOVE
         # self.sleep_sec_remove_response = _config.SLEEP_SEC_REMOVE_RESPONSE
 
@@ -36,7 +36,7 @@ class Processor():
                          fpath_dst: str, \
                          bgtask: BackgroundTasks=BackgroundTasks(), \
                          **kwargs
-    ):
+    ) -> dict:
         raise NotImplementedError()
 
     async def main_file(self, 
@@ -45,7 +45,7 @@ class Processor():
                         fpath_dst: str, \
                         bgtask: BackgroundTasks=BackgroundTasks(), \
                         **kwargs
-    ):
+    ) -> dict:
 
         raise NotImplementedError()
 
@@ -133,6 +133,10 @@ class Router():
                                                      f"{self.path_data}/{fname_dst}", \
                                                      **kwargs)
             
+            if os.path.exists(f"{self.path_data}/{fname_dst}"):
+                return self.post_processing(f"{self.path_data}/{fname_dst}", **kwargs)
+            else:
+                return result
             
         try:
             pass
@@ -142,7 +146,7 @@ class Router():
             # print("finally0")
             pass
         
-        return result
+        
 
     def preprocess_zip(self):
         pass
@@ -179,7 +183,9 @@ class Router():
                 bgtask.add_task(tools.remove_dir, path_dir_export)
                 with zipfile.ZipFile(f"{self.path_data}/{fname}") as zf:
                     zf.extractall(path = path_dir_export)
-                fname = path_dir_export
+                # fname = path_dir_export
+                # print(f"{self.path_data}/{fname}")
+                bgtask.add_task(tools.remove_dir, path_dir_export)
 
 
             bgtask.add_task(tools.remove_file, f"{self.path_data}/{fname}")
@@ -190,8 +196,11 @@ class Router():
                                                     f"{self.path_data}/{fname_ex_org}", \
                                                     **kwargs)
         
-            self.post_processing(f"{self.path_data}/{fname_ex_org}")
-        
+            
+            if os.path.exists(f"{self.path_data}/{fname_ex_org}"):
+                return self.post_processing(f"{self.path_data}/{fname_ex_org}", **kwargs)
+            else:
+                return result
         try:
             pass
         except:
@@ -200,4 +209,4 @@ class Router():
             # print("finally0")
             pass
         
-        return result
+        
