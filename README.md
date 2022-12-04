@@ -3,7 +3,7 @@
 
 ###
 ```
-pip install git@github.com:kevin-tofu/MediaHandler.git
+pip install git+https://github.com/kevin-tofu/MediaHandler.git
 ```
 
 ###
