@@ -11,6 +11,7 @@ idna==3.4
 iniconfig==1.1.1
 MediaHandler==0.0.1
 numpy==1.23.5
+opencv-python==4.6.0.66
 packaging==21.3
 Pillow==9.3.0
 pluggy==1.0.0
@@ -25,4 +26,3 @@ starlette==0.22.0
 tomli==2.0.1
 typing_extensions==4.4.0
 uvicorn==0.20.0
-wheel==0.38.4

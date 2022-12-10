@@ -7,6 +7,9 @@ import zipfile
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi import HTTPException, BackgroundTasks
 from fastapi import Response, UploadFile
+# import numpy as np
+import io
+import cv2
 
 from MediaHandler.logconf import medialogger
 logger = medialogger(__name__)
@@ -39,7 +42,7 @@ class Processor():
     ) -> dict:
         raise NotImplementedError()
 
-    async def main_file(self, 
+    async def main_file(self, \
                         process_name: str, \
                         fpath_org: str, \
                         fpath_dst: str, \
@@ -47,6 +50,13 @@ class Processor():
                         **kwargs
     ) -> dict:
 
+        raise NotImplementedError()
+
+    async def main_BytesIo(self, \
+                           process_name: str, \
+                           fBytesIO: io.BytesIO, \
+                           **kwargs
+    ):
         raise NotImplementedError()
 
 
@@ -73,12 +83,16 @@ class Router():
         ftype_dst = tools.check_filetype(fpath_dst)
         fname = os.path.basename(fpath_dst)
         ext = tools.get_file_extension(fpath_dst)
+        # print(ftype_dst, ext, tools.FileType.IMAGE)
+        # print(ftype_dst == tools.FileType.IMAGE)
         if ftype_dst == tools.FileType.IMAGE:
-            return FileResponse(fpath_dst, \
-                                media_type = f'image/{ext}', \
-                                filename=fname
-                                # background=bgtask
-                                )
+            img = cv2.imread(fpath_dst)
+            _, img = cv2.imencode(f'.{ext}', img)
+            return Response(img.tostring(), \
+                            media_type = f'image/{ext}', \
+                            # filename=fname
+                            # background=bgtask
+                            )
         
             # _, image_enc = cv2.imencode(f'.{ext}', img)
             
@@ -209,4 +223,93 @@ class Router():
             # print("finally0")
             pass
         
+
+    async def post_file(self, \
+                        process_name: str, \
+                        file: UploadFile, \
+                        retfile_extension: Optional[str], \
+                        bgtask: BackgroundTasks = BackgroundTasks(),\
+                        **kwargs):
+
+        logger.info("post_file")
+        kwargs['bgtask'] = bgtask
+
+        # try:
+        if True:
+            test = kwargs["test"]
+
+            fname_org = file.filename
+            ftype_input = tools.check_filetype(fname_org)
+            fname, uuid_f = tools.fname2uuid(fname_org)
+            tools.save_file(self.path_data, fname, file, test)
+            kwargs["fname_org"] = fname_org
+
+            if not retfile_extension is None:
+                fname_ex_org = tools.addstr2fname(fname, "-res", ext = retfile_extension)
+            else:
+                fname_ex_org = tools.addstr2fname(fname, "-res")
+            
+            if ftype_input == tools.FileType.ZIP:
+                path_dir_export = f"{self.path_data}/{os.path.splitext(fname)[0]}"
+                os.makedirs(path_dir_export)
+                bgtask.add_task(tools.remove_dir, path_dir_export)
+                with zipfile.ZipFile(f"{self.path_data}/{fname}") as zf:
+                    zf.extractall(path = path_dir_export)
+                # fname = path_dir_export
+                # print(f"{self.path_data}/{fname}")
+                bgtask.add_task(tools.remove_dir, path_dir_export)
+
+
+            bgtask.add_task(tools.remove_file, f"{self.path_data}/{fname}")
+            bgtask.add_task(tools.remove_file, f"{self.path_data}/{fname_ex_org}")    
+            
+            result = await self.processor.main_file(process_name, \
+                                                    f"{self.path_data}/{fname}", \
+                                                    f"{self.path_data}/{fname_ex_org}", \
+                                                    **kwargs)
         
+            
+            if os.path.exists(f"{self.path_data}/{fname_ex_org}"):
+                return self.post_processing(f"{self.path_data}/{fname_ex_org}", **kwargs)
+            else:
+                return result
+        try:
+            pass
+        except:
+            raise HTTPException(status_code=503, detail="Error") 
+        finally:
+            # print("finally0")
+            pass
+
+
+
+    async def post_file_BytesIO(self, \
+                        process_name: str, \
+                        file: UploadFile, \
+                        retfile_extension: Optional[str], \
+                        bgtask: BackgroundTasks = BackgroundTasks(),\
+                        **kwargs):
+
+        logger.info("post_file")
+        kwargs['bgtask'] = bgtask
+
+        # try:
+        if True:
+            test = kwargs["test"]
+
+            fname_org = file.filename
+            file_byte = io.BytesIO(await file.read())
+            ftype_input = tools.check_filetype(fname_org)
+            kwargs["fname_org"] = fname_org
+
+            result = await self.processor.main_BytesIO(process_name, file_byte, **kwargs)
+            return result
+            
+        try:
+            pass
+        except:
+            raise HTTPException(status_code=503, detail="Error") 
+        finally:
+            # print("finally0")
+            pass
+            
