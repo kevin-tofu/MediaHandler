@@ -1,3 +1,6 @@
+# import pathlib
+# print(pathlib.Path(__file__).parent)
+
 import os
 from fastapi import FastAPI
 # from fastapi.middleware.cors import CORSMiddleware
@@ -8,6 +11,7 @@ import config
 
 from logconf import mylogger
 logger = mylogger(__name__)
+
 
 app = FastAPI()
 # app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
