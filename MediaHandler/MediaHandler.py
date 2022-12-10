@@ -305,8 +305,8 @@ class Router():
             result = await self.processor.main_BytesIO(process_name, file_byte, **kwargs)
             return result
             
-        try:
-            pass
+        # try:
+        #     pass
         except:
             raise HTTPException(status_code=503, detail="Error") 
         finally:
