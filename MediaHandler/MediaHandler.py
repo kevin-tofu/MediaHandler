@@ -285,7 +285,8 @@ class Router():
 
     async def post_file_BytesIO(self, \
                                 process_name: str, \
-                                fBytesIO: io.BytesIO, \
+                                file: UploadFile, \
+                                bgtask: BackgroundTasks = BackgroundTasks(),\
                                 **kwargs):
 
         logger.info("post_file")
