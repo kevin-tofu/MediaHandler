@@ -52,7 +52,6 @@ class myProcessor(MediaHandler.Processor):
         ext = 'jpg'
         _, img_np = cv2.imencode(f'.{ext}', img_np)
         
-
         return Response(content = img_np.tostring(), \
                         media_type = f'image/{ext}'
         )

@@ -118,8 +118,8 @@ class Router():
         test = kwargs['test']
         kwargs['bgtask'] = bgtask
         
-        # try:
-        if True:
+        try:
+        # if True:
 
             path_files_list = list()
             fname_list = list()
@@ -152,8 +152,8 @@ class Router():
             else:
                 return result
             
-        try:
-            pass
+        # try:
+        #     pass
         except:
             raise HTTPException(status_code=503, detail="Error") 
         finally:
@@ -176,8 +176,8 @@ class Router():
         logger.info("post_file")
         kwargs['bgtask'] = bgtask
 
-        # try:
-        if True:
+        try:
+        # if True:
             test = kwargs["test"]
 
             fname_org = file.filename
@@ -215,8 +215,8 @@ class Router():
                 return self.post_processing(f"{self.path_data}/{fname_ex_org}", **kwargs)
             else:
                 return result
-        try:
-            pass
+        # try:
+        #     pass
         except:
             raise HTTPException(status_code=503, detail="Error") 
         finally:
@@ -234,8 +234,8 @@ class Router():
         logger.info("post_file")
         kwargs['bgtask'] = bgtask
 
-        # try:
-        if True:
+        try:
+        # if True:
             test = kwargs["test"]
 
             fname_org = file.filename
@@ -268,13 +268,13 @@ class Router():
                                                     f"{self.path_data}/{fname_ex_org}", \
                                                     **kwargs)
         
-            
             if os.path.exists(f"{self.path_data}/{fname_ex_org}"):
                 return self.post_processing(f"{self.path_data}/{fname_ex_org}", **kwargs)
             else:
                 return result
-        try:
-            pass
+
+        # try:
+        #     pass
         except:
             raise HTTPException(status_code=503, detail="Error") 
         finally:
@@ -293,8 +293,8 @@ class Router():
         logger.info("post_file")
         kwargs['bgtask'] = bgtask
 
-        # try:
-        if True:
+        try:
+        # if True:
             test = kwargs["test"]
 
             fname_org = file.filename
