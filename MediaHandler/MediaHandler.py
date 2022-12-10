@@ -293,8 +293,8 @@ class Router():
         logger.info("post_file")
         kwargs['bgtask'] = bgtask
 
-        try:
-        # if True:
+        # try:
+        if True:
             test = kwargs["test"]
 
             fname_org = file.filename
@@ -305,8 +305,8 @@ class Router():
             result = await self.processor.main_BytesIO(process_name, file_byte, **kwargs)
             return result
             
-        # try:
-        #     pass
+        try:
+            pass
         except:
             raise HTTPException(status_code=503, detail="Error") 
         finally:
