@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 from typing import List
 import pathlib
+import os
 # print(pathlib.Path(__file__).parent)
 
 
@@ -8,10 +9,11 @@ print(find_packages())
 
 def get_install_requires() -> List[str]:
     """Returns requirements.txt parsed to a list"""
-    fname = f"{pathlib.Path(__file__).parent}/requirements.txt"
+    fpath = f"{pathlib.Path(__file__).parent}/requirements.txt"
     targets = []
-    if fname.exists():
-        with open(fname, 'r') as f:
+    print(fpath)
+    if os.path.exists(fpath):
+        with open(fpath, 'r') as f:
             targets = f.read().splitlines()
     return targets
 
