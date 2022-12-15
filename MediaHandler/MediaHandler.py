@@ -33,29 +33,30 @@ class Processor():
     def __init__(self, **kwargs):
         pass
     
-    async def main_files(self, \
+    async def post_files_process(self, \
                          process_name: str, \
                          fpath_files: List[str], \
-                         fpath_dst: str, \
+                         fpath_dst: Optional[str] = None, \
                          bgtask: BackgroundTasks=BackgroundTasks(), \
                          **kwargs
     ) -> dict:
         raise NotImplementedError()
 
-    async def main_file(self, \
+    async def post_file_process(self, \
                         process_name: str, \
                         fpath_org: str, \
-                        fpath_dst: str, \
+                        fpath_dst: Optional[str] = None, \
                         bgtask: BackgroundTasks=BackgroundTasks(), \
                         **kwargs
     ) -> dict:
 
         raise NotImplementedError()
 
-    async def main_BytesIo(self, \
-                           process_name: str, \
-                           fBytesIO: io.BytesIO, \
-                           **kwargs
+    async def post_BytesIO_process(self, \
+                                   process_name: str, \
+                                   fBytesIO: io.BytesIO, \
+                                   fname_org: str, \
+                                   **kwargs
     ):
         raise NotImplementedError()
 
@@ -110,7 +111,7 @@ class Router():
     async def post_files(self, \
                          process_name: str, \
                          files_list: List[UploadFile], \
-                         retfile_extension: str = ".jpg", \
+                         retfile_extension: Optional[str] = None, \
                          bgtask: BackgroundTasks = BackgroundTasks(),\
                          **kwargs):
 
@@ -137,18 +138,26 @@ class Router():
                 fname_org_list.append(fname_org)
             
             kwargs["fname_org_list"] = fname_org_list
-            fname_dst = tools.make_fname_uuid(retfile_extension)
-            
             bgtask.add_task(tools.remove_files, path_files_list)
-            bgtask.add_task(tools.remove_file, f"{self.path_data}/{fname_dst}")
 
-            result = await self.processor.main_files(process_name, \
-                                                     path_files_list, \
-                                                     f"{self.path_data}/{fname_dst}", \
-                                                     **kwargs)
+            if not retfile_extension is None:
+                fname_dst = tools.make_fname_uuid(retfile_extension)
+                fpath_dst = f"{self.path_data}/{fname_dst}"
+                bgtask.add_task(tools.remove_file, fpath_dst)
+            else:
+                fpath_dst = None
+
+
+            result = await self.processor.post_files_process(process_name, \
+                                                             path_files_list, \
+                                                             fpath_dst, \
+                                                             **kwargs)
             
-            if os.path.exists(f"{self.path_data}/{fname_dst}"):
-                return self.post_processing(f"{self.path_data}/{fname_dst}", **kwargs)
+            if type(fpath_dst) is str:
+                if os.path.exists(fpath_dst):
+                    return self.post_processing(fpath_dst, **kwargs)
+                else:
+                    return result
             else:
                 return result
             
@@ -161,133 +170,20 @@ class Router():
             pass
         
         
-
-    def preprocess_zip(self):
-        pass
-
+    def preprocess_zip(self, fname, bgtask):
+        path_dir_export = f"{self.path_data}/{os.path.splitext(fname)[0]}"
+        os.makedirs(path_dir_export)
+        bgtask.add_task(tools.remove_dir, path_dir_export)
+        with zipfile.ZipFile(f"{self.path_data}/{fname}") as zf:
+            zf.extractall(path = path_dir_export)
+        bgtask.add_task(tools.remove_dir, path_dir_export)
 
     async def post_file(self, \
                         process_name: str, \
                         file: UploadFile, \
-                        retfile_extension: Optional[str], \
+                        retfile_extension: Optional[str] = None, \
                         bgtask: BackgroundTasks = BackgroundTasks(),\
                         **kwargs):
-
-        logger.info("post_file")
-        kwargs['bgtask'] = bgtask
-
-        try:
-        # if True:
-            test = kwargs["test"]
-
-            fname_org = file.filename
-            ftype_input = tools.check_filetype(fname_org)
-            fname, uuid_f = tools.fname2uuid(fname_org)
-            tools.save_file(self.path_data, fname, file, test)
-            kwargs["fname_org"] = fname_org
-
-            if not retfile_extension is None:
-                fname_ex_org = tools.addstr2fname(fname, "-res", ext = retfile_extension)
-            else:
-                fname_ex_org = tools.addstr2fname(fname, "-res")
-            
-            if ftype_input == tools.FileType.ZIP:
-                path_dir_export = f"{self.path_data}/{os.path.splitext(fname)[0]}"
-                os.makedirs(path_dir_export)
-                bgtask.add_task(tools.remove_dir, path_dir_export)
-                with zipfile.ZipFile(f"{self.path_data}/{fname}") as zf:
-                    zf.extractall(path = path_dir_export)
-                # fname = path_dir_export
-                # print(f"{self.path_data}/{fname}")
-                bgtask.add_task(tools.remove_dir, path_dir_export)
-
-
-            bgtask.add_task(tools.remove_file, f"{self.path_data}/{fname}")
-            bgtask.add_task(tools.remove_file, f"{self.path_data}/{fname_ex_org}")    
-            
-            result = await self.processor.main_file(process_name, \
-                                                    f"{self.path_data}/{fname}", \
-                                                    f"{self.path_data}/{fname_ex_org}", \
-                                                    **kwargs)
-        
-            
-            if os.path.exists(f"{self.path_data}/{fname_ex_org}"):
-                return self.post_processing(f"{self.path_data}/{fname_ex_org}", **kwargs)
-            else:
-                return result
-        # try:
-        #     pass
-        except:
-            raise HTTPException(status_code=503, detail="Error") 
-        finally:
-            # print("finally0")
-            pass
-        
-
-    async def post_file(self, \
-                        process_name: str, \
-                        file: UploadFile, \
-                        retfile_extension: Optional[str], \
-                        bgtask: BackgroundTasks = BackgroundTasks(),\
-                        **kwargs):
-
-        logger.info("post_file")
-        kwargs['bgtask'] = bgtask
-
-        try:
-        # if True:
-            test = kwargs["test"]
-
-            fname_org = file.filename
-            ftype_input = tools.check_filetype(fname_org)
-            fname, uuid_f = tools.fname2uuid(fname_org)
-            tools.save_file(self.path_data, fname, file, test)
-            kwargs["fname_org"] = fname_org
-
-            if not retfile_extension is None:
-                fname_ex_org = tools.addstr2fname(fname, "-res", ext = retfile_extension)
-            else:
-                fname_ex_org = tools.addstr2fname(fname, "-res")
-            
-            if ftype_input == tools.FileType.ZIP:
-                path_dir_export = f"{self.path_data}/{os.path.splitext(fname)[0]}"
-                os.makedirs(path_dir_export)
-                bgtask.add_task(tools.remove_dir, path_dir_export)
-                with zipfile.ZipFile(f"{self.path_data}/{fname}") as zf:
-                    zf.extractall(path = path_dir_export)
-                # fname = path_dir_export
-                # print(f"{self.path_data}/{fname}")
-                bgtask.add_task(tools.remove_dir, path_dir_export)
-
-
-            bgtask.add_task(tools.remove_file, f"{self.path_data}/{fname}")
-            bgtask.add_task(tools.remove_file, f"{self.path_data}/{fname_ex_org}")    
-            
-            result = await self.processor.main_file(process_name, \
-                                                    f"{self.path_data}/{fname}", \
-                                                    f"{self.path_data}/{fname_ex_org}", \
-                                                    **kwargs)
-        
-            if os.path.exists(f"{self.path_data}/{fname_ex_org}"):
-                return self.post_processing(f"{self.path_data}/{fname_ex_org}", **kwargs)
-            else:
-                return result
-
-        # try:
-        #     pass
-        except:
-            raise HTTPException(status_code=503, detail="Error") 
-        finally:
-            # print("finally0")
-            pass
-
-
-
-    async def post_file_BytesIO(self, \
-                                process_name: str, \
-                                file: UploadFile, \
-                                bgtask: BackgroundTasks = BackgroundTasks(),\
-                                **kwargs):
 
         logger.info("post_file")
         kwargs['bgtask'] = bgtask
@@ -297,15 +193,69 @@ class Router():
             test = kwargs["test"]
 
             fname_org = file.filename
-            file_byte = io.BytesIO(await file.read())
             ftype_input = tools.check_filetype(fname_org)
+            fname, uuid_f = tools.fname2uuid(fname_org)
+            tools.save_file(self.path_data, fname, file, test)
             kwargs["fname_org"] = fname_org
 
-            result = await self.processor.main_BytesIO(process_name, file_byte, **kwargs)
-            return result
+            bgtask.add_task(tools.remove_file, f"{self.path_data}/{fname}")
+            if ftype_input == tools.FileType.ZIP:
+                self.preprocess_zip(fname, bgtask)
+                
+            if not retfile_extension is None:
+                fname_dst = tools.addstr2fname(fname, "-res", ext = retfile_extension)
+                fpath_dst = f"{self.path_data}/{fname_dst}"
+                bgtask.add_task(tools.remove_file, fpath_dst)
+            else:
+                fpath_dst = None
+
+            result = await self.processor.post_file_process(process_name, \
+                                                            f"{self.path_data}/{fname}", \
+                                                            fpath_dst, \
+                                                            **kwargs)
             
+            if type(fpath_dst) is str:
+                if os.path.exists(fpath_dst):
+                    return self.post_processing(fpath_dst, **kwargs)
+                else:
+                    return result
+            else:
+                return result
+
         try:
             pass
+        except:
+            raise HTTPException(status_code=503, detail="Error") 
+        finally:
+            # print("finally0")
+            pass
+        
+
+    async def post_file_BytesIO(self, \
+                                process_name: str, \
+                                file: UploadFile, \
+                                bgtask: BackgroundTasks = BackgroundTasks(),\
+                                **kwargs):
+
+        logger.info("post_file_BytesIO")
+        kwargs['bgtask'] = bgtask
+
+        try:
+        # if True:
+            test = kwargs["test"]
+
+            fname_org = file.filename
+            file_byte = io.BytesIO(await file.read())
+            ftype_input = tools.check_filetype(fname_org)
+
+            result = await self.processor.post_BytesIO_process(process_name, \
+                                                            file_byte, \
+                                                            fname_org, \
+                                                            **kwargs)
+            return result
+            
+        # try:
+        #     pass
         except:
             raise HTTPException(status_code=503, detail="Error") 
         finally:
