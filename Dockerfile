@@ -15,8 +15,10 @@ RUN apt-get install libopencv-dev -y
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-RUN pip install .
-RUN pip install numpy==1.19.3 opencv-python==4.6.0.66
+
+# Test
+# RUN pip install numpy==1.19.3 opencv-python==4.6.0.66
 
 EXPOSE 80
+# CMD ["python", "./test_server.py"]
 CMD ["python", "./server.py"]
