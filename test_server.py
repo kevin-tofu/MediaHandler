@@ -5,7 +5,7 @@ import config
 
 path_data = config.PATH_DATA
 name_video = 'test_video.mp4'
-name_image = 'test_image.png'
+name_image = 'test_image.jpg'
 name_zip = 'test_zip.zip'
 name_image_wrong = 'test_image.jp'
 
@@ -20,7 +20,7 @@ def test_read_main():
 def test_video():
 
     with open(f"{path_data}/{name_video}", "rb") as _file:
-        res = testclient.post("/video/?test=1", files={"file": (f"_{name_video}", _file, "video/mp4")})
+        res = testclient.post("/video?test=1", files={"file": (f"_{name_video}", _file, "video/mp4")})
     print(res)
     assert res.status_code == 200
     assert type(res.json()) == dict
@@ -33,7 +33,7 @@ def test_video():
 def test_image():
 
     with open(f"{path_data}/{name_image}", "rb") as _file:
-        res = testclient.post("/image/?test=1", files={"file": (f"_{name_image}", _file, "image/png")})
+        res = testclient.post("/image?test=1", files={"file": (f"_{name_image}", _file, "image/png")})
     print(res.status_code)
     assert res.status_code == 200
     # assert type(res.json()) == dict
@@ -49,7 +49,7 @@ def test_image():
 def test_zip():
 
     with open(f"{path_data}/{name_zip}", "rb") as _file:
-        res = testclient.post("/zip/?test=1", files={"file": (f"{name_zip}", _file, "application/zip")})
+        res = testclient.post("/zip?test=1", files={"file": (f"{name_zip}", _file, "application/zip")})
     print(res.status_code)
     assert res.status_code == 200
     assert type(res.json()) == dict
@@ -65,7 +65,7 @@ def test_files():
             ('files', file_image), \
             ('files', file_video)
         ]
-        res = testclient.post("/files/?test=1", files=files)
+        res = testclient.post("/files?test=1", files=files)
         print(res.status_code)
         assert res.status_code == 200
         assert type(res.json()) == dict
