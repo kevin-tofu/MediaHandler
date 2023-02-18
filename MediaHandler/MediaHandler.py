@@ -60,7 +60,7 @@ class Processor():
         fBytesIO: io.BytesIO, \
         fname_org: str, \
         **kwargs
-    )-< :
+    ):
         raise NotImplementedError()
 
 
