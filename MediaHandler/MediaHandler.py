@@ -33,38 +33,43 @@ class Processor():
     def __init__(self, **kwargs):
         pass
     
-    async def post_files_process(self, \
-                         process_name: str, \
-                         fpath_files: List[str], \
-                         fpath_dst: Optional[str] = None, \
-                         bgtask: BackgroundTasks=BackgroundTasks(), \
-                         **kwargs
-    ) -> dict:
-        raise NotImplementedError()
-
-    async def post_file_process(self, \
-                        process_name: str, \
-                        fpath_org: str, \
-                        fpath_dst: Optional[str] = None, \
-                        bgtask: BackgroundTasks=BackgroundTasks(), \
-                        **kwargs
-    ) -> dict:
-
-        raise NotImplementedError()
-
-    async def post_BytesIO_process(self, \
-                                   process_name: str, \
-                                   fBytesIO: io.BytesIO, \
-                                   fname_org: str, \
-                                   **kwargs
+    async def post_files_process(
+        self, \
+        process_name: str, \
+        fpath_files: List[str], \
+        fpath_dst: Optional[str] = None, \
+        bgtask: BackgroundTasks=BackgroundTasks(), \
+        **kwargs
     ):
+        raise NotImplementedError()
+
+    async def post_file_process(
+        self, \
+        process_name: str, \
+        fpath_org: str, \
+        fpath_dst: Optional[str] = None, \
+        bgtask: BackgroundTasks=BackgroundTasks(), \
+        **kwargs
+    ):
+
+        raise NotImplementedError()
+
+    async def post_BytesIO_process(
+        self, \
+        process_name: str, \
+        fBytesIO: io.BytesIO, \
+        fname_org: str, \
+        **kwargs
+    )-< :
         raise NotImplementedError()
 
 
 class Router():
-    def __init__(self, \
-                 processor: Processor, \
-                 config: Config):
+    def __init__(
+        self, \
+        processor: Processor, \
+        config: Config
+    ):
 
         self.processor = processor
         self.config = config
@@ -108,12 +113,14 @@ class Router():
                                 # background=bgtask
                                 )
 
-    async def post_files(self, \
-                         process_name: str, \
-                         files_list: List[UploadFile], \
-                         retfile_extension: Optional[str] = None, \
-                         bgtask: BackgroundTasks = BackgroundTasks(),\
-                         **kwargs):
+    async def post_files(
+        self, \
+        process_name: str, \
+        files_list: List[UploadFile], \
+        retfile_extension: Optional[str] = None, \
+        bgtask: BackgroundTasks = BackgroundTasks(),\
+        **kwargs
+    ):
 
         logger.info("post_files")
         test = kwargs['test']
@@ -178,12 +185,14 @@ class Router():
             zf.extractall(path = path_dir_export)
         bgtask.add_task(tools.remove_dir, path_dir_export)
 
-    async def post_file(self, \
-                        process_name: str, \
-                        file: UploadFile, \
-                        retfile_extension: Optional[str] = None, \
-                        bgtask: BackgroundTasks = BackgroundTasks(),\
-                        **kwargs):
+    async def post_file(
+        self, \
+        process_name: str, \
+        file: UploadFile, \
+        retfile_extension: Optional[str] = None, \
+        bgtask: BackgroundTasks = BackgroundTasks(),\
+        **kwargs
+    ):
 
         logger.info("post_file")
         kwargs['bgtask'] = bgtask
@@ -231,17 +240,18 @@ class Router():
             pass
         
 
-    async def post_file_BytesIO(self, \
-                                process_name: str, \
-                                file: UploadFile, \
-                                bgtask: BackgroundTasks = BackgroundTasks(),\
-                                **kwargs):
+    async def post_file_BytesIO(
+        self, \
+        process_name: str, \
+        file: UploadFile, \
+        bgtask: BackgroundTasks = BackgroundTasks(),\
+        **kwargs
+    ):
 
         logger.info("post_file_BytesIO")
         kwargs['bgtask'] = bgtask
 
-        try:
-        # if True:
+        if kwargs['test'] == 1:
             test = kwargs["test"]
 
             fname_org = file.filename
@@ -253,12 +263,26 @@ class Router():
                                                             fname_org, \
                                                             **kwargs)
             return result
-            
-        # try:
-        #     pass
-        except:
-            raise HTTPException(status_code=503, detail="Error") 
-        finally:
-            # print("finally0")
-            pass
-            
+        else:
+            try:
+            # if True:
+                test = kwargs["test"]
+
+                fname_org = file.filename
+                file_byte = io.BytesIO(await file.read())
+                ftype_input = tools.check_filetype(fname_org)
+
+                result = await self.processor.post_BytesIO_process(process_name, \
+                                                                file_byte, \
+                                                                fname_org, \
+                                                                **kwargs)
+                return result
+                
+            # try:
+            #     pass
+            except:
+                raise HTTPException(status_code=503, detail="Error") 
+            finally:
+                # print("finally0")
+                pass
+                
