@@ -1,7 +1,9 @@
 
-def video_conversion(path_file_src: str, \
-                     path_file_dst: str, \
-                     test: Optional[Union[None, int]]=None):
+def video_conversion(
+    path_file_src: str, \
+    path_file_dst: str, \
+    test: Optional[Union[None, int]]=None
+):
     
     import ffmpeg
 
@@ -14,7 +16,11 @@ def video_conversion(path_file_src: str, \
     ffmpeg.run(stream)
 
 
-def video_conversion_fname(path_data: str, fname_src: str, fname_dst: str):
+def video_conversion_fname(
+    path_data: str, 
+    fname_src: str, 
+    fname_dst: str
+):
 
     video_conversion(f"{path_data}/{fname_src}", \
                      f"{path_data}/{fname_dst}"
@@ -22,9 +28,11 @@ def video_conversion_fname(path_data: str, fname_src: str, fname_dst: str):
 
 
 
-def video_conversion_xxx2mp4(path_data: str, \
-                             fname: str, \
-                             remove_fileorg : bool=True):
+def video_conversion_xxx2mp4(
+    path_data: str, \
+    fname: str, \
+    remove_fileorg : bool=True
+):
 # def converter_xxx2mp4(path_data: str, fname: str):
 
     fname_without_ext = os.path.splitext(fname)[0]
@@ -41,8 +49,10 @@ def video_conversion_xxx2mp4(path_data: str, \
         return fname_dst
 
 
-def is_same_extension_file(fname1: str, \
-                           fname2: str):
+def is_same_extension_file(
+    fname1: str, \
+    fname2: str
+):
     """
     """
 
@@ -60,8 +70,10 @@ def get_extension(fname: str):
     file_org_ext = os.path.splitext(fname)[-1]
     return file_org_ext[1::]
 
-def is_same_extension(fname: str, \
-                      extension: str):
+def is_same_extension(
+    fname: str, \
+    extension: str
+):
     """
     """
 

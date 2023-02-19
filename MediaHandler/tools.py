@@ -146,17 +146,18 @@ def remove_files(path_files: str, sleep_sec: int=5) -> None:
             os.unlink(path_file)
             logger.info(f'removed : {path_file}')
 
-
 async def read_image(file) -> Image.Image:
 
     logger.debug("read_imagefile")
     image = Image.open(BytesIO(await file.read()))
     return np.asarray(image)
 
-async def save_image(_path: str, \
-                     _fname: str, \
-                     file: UploadFile, 
-                     test: Optional[Union[None, int]]=None):
+async def save_image(
+    _path: str, \
+    _fname: str, \
+    file: UploadFile, 
+    test: Optional[Union[None, int]]=None
+):
     try:
         logger.info("save_image")
         image = Image.open(BytesIO(await file.read()))
@@ -165,10 +166,12 @@ async def save_image(_path: str, \
     except:
         raise HTTPException(status_code=400, detail='File Definition Error')
 
-async def read_save_image(_path: str, \
-                          _fname: str, \
-                          _file: UploadFile, \
-                          test: Optional[Union[None, int]]=None):
+async def read_save_image(
+    _path: str, \
+    _fname: str, \
+    _file: UploadFile, \
+    test: Optional[Union[None, int]]=None
+):
     
     logger.info(f"save_image: {_path}/{_fname}")
     try:
@@ -182,10 +185,12 @@ async def read_save_image(_path: str, \
     return ret
 
 
-def save_file(path: str, \
-              fname: str, \
-              file: UploadFile, \
-              test: Optional[Union[None, int]]=None):
+def save_file(
+    path: str, \
+    fname: str, \
+    file: UploadFile, \
+    test: Optional[Union[None, int]]=None
+):
 
     try:
         with open(f"{path}/{fname}", 'wb') as local_temp_file:

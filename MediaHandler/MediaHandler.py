@@ -94,11 +94,12 @@ class Router():
         if ftype_dst == tools.FileType.IMAGE:
             img = cv2.imread(fpath_dst)
             _, img = cv2.imencode(f'.{ext}', img)
-            return Response(img.tostring(), \
-                            media_type = f'image/{ext}', \
-                            # filename=fname
-                            # background=bgtask
-                            )
+            return Response(
+                img.tostring(), \
+                media_type = f'image/{ext}', \
+                # filename=fname
+                # background=bgtask
+            )
         
             # _, image_enc = cv2.imencode(f'.{ext}', img)
             
@@ -107,11 +108,12 @@ class Router():
             #                 background=bgtask
             # )
         else:
-            return FileResponse(fpath_dst, \
-                                filename=f"{fname}", \
-                                media_type = f'video/{ext}'
-                                # background=bgtask
-                                )
+            return FileResponse(
+                fpath_dst, \
+                filename=f"{fname}", \
+                media_type = f'video/{ext}'
+                # background=bgtask
+            )
 
     async def post_files(
         self, \
@@ -155,10 +157,12 @@ class Router():
                 fpath_dst = None
 
 
-            result = await self.processor.post_files_process(process_name, \
-                                                             path_files_list, \
-                                                             fpath_dst, \
-                                                             **kwargs)
+            result = await self.processor.post_files_process(
+                process_name, \
+                path_files_list, \
+                fpath_dst, \
+                **kwargs
+            )
             
             if type(fpath_dst) is str:
                 if os.path.exists(fpath_dst):
@@ -218,10 +222,12 @@ class Router():
             else:
                 fpath_dst = None
 
-            result = await self.processor.post_file_process(process_name, \
-                                                            f"{self.path_data}/{fname}", \
-                                                            fpath_dst, \
-                                                            **kwargs)
+            result = await self.processor.post_file_process(
+                process_name, \
+                f"{self.path_data}/{fname}", \
+                fpath_dst, \
+                **kwargs
+            )
             
             if type(fpath_dst) is str:
                 if os.path.exists(fpath_dst):
@@ -258,10 +264,12 @@ class Router():
             file_byte = io.BytesIO(await file.read())
             ftype_input = tools.check_filetype(fname_org)
 
-            result = await self.processor.post_BytesIO_process(process_name, \
-                                                            file_byte, \
-                                                            fname_org, \
-                                                            **kwargs)
+            result = await self.processor.post_BytesIO_process(
+                process_name, \
+                file_byte, \
+                fname_org, \
+                **kwargs
+            )
             return result
         else:
             try:
@@ -272,10 +280,12 @@ class Router():
                 file_byte = io.BytesIO(await file.read())
                 ftype_input = tools.check_filetype(fname_org)
 
-                result = await self.processor.post_BytesIO_process(process_name, \
-                                                                file_byte, \
-                                                                fname_org, \
-                                                                **kwargs)
+                result = await self.processor.post_BytesIO_process(
+                    process_name, \
+                    file_byte, \
+                    fname_org, \
+                    **kwargs
+                )
                 return result
                 
             # try:
