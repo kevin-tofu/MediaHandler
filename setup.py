@@ -18,16 +18,16 @@ def get_install_requires() -> List[str]:
     return targets
 
 setup(
-    name='MediaHandler',\
+    name='MediaRouter',\
     version="v0.0.1",\
-    url='https://github.com/kevin-tofu/MediaHandler',\
-    download_url='https://github.com/kevin-tofu/MediaHandler/releases/tag/v0.0.1',\
+    url='https://github.com/kevin-tofu/MediaRouter',\
+    download_url='https://github.com/kevin-tofu/MediaRouter/releases/tag/v0.0.1',\
     description="",\
     install_requires=get_install_requires(),
     # install_requires=['fastapi', 'uvicorn', 'wheel'],
-    packages=['MediaHandler'],\
+    packages=['MediaRouter'],\
     # packages=find_packages(), \
-    package_dir = {'MediaHandler': 'MediaHandler'},\
+    package_dir = {'MediaRouter': 'MediaRouter'},\
     author='kevin-tofu',\
     license='MIT', \
     python_requires='>3.8'

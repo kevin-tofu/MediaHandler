@@ -6,12 +6,12 @@ from fastapi import Response
 from typing import List, Optional, Union
 
 from PIL import Image
-import MediaHandler
+import MediaRouter
 import cv2
 import numpy as np
 
 
-class myProcessor(MediaHandler.Processor):
+class myProcessor(MediaRouter.Processor):
     def __init__(self):
         super().__init__()
 
@@ -67,7 +67,7 @@ test_config = dict(
     PATH_DATA = "./temp"
 )
 
-handler = MediaHandler.Router(myProcessor(), MediaHandler.Config(**test_config))
+handler = MediaRouter.Router(myProcessor(), MediaRouter.Config(**test_config))
 test_router = APIRouter(prefix="")
 
 @test_router.post('/image')

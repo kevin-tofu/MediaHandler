@@ -1,18 +1,20 @@
-# MediaHandler
- 
 
-###
-```
-pip install git+https://github.com/kevin-tofu/MediaHandler.git
-```
+# MediaRouter  
 
-###
-```
-handler = MediaHandler.Router(myProcessor(), MediaHandler.Config(**test_config))
+## How to install
+
+```python
+pip install git+https://github.com/kevin-tofu/MediaRouter.git
 ```
 
+## Usage Example
+
+```python
+handler = MediaRouter.Router(myProcessor(), MediaRouter.Config(**test_config))
 ```
-class myProcessor(MediaHandler.Processor):
+
+```python
+class myProcessor(MediaRouter.Processor):
     def __init__(self):
         super().__init__()
 
@@ -36,8 +38,8 @@ class myProcessor(MediaHandler.Processor):
         
 ```
 
-```
-class myProcessor(MediaHandler.Processor):
+```python
+class myProcessor(MediaRouter.Processor):
     def __init__(self):
         super().__init__()
 
