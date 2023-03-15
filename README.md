@@ -1,5 +1,5 @@
 
-# MediaRouter  
+# mediarouter  
 
 ## What this repository is going to solve
 
@@ -24,11 +24,11 @@ poetry run python3 test/test_server.py
 ## Usage Example
 
 ```python
-handler = MediaRouter.Router(myProcessor(), MediaRouter.Config(**test_config))
+handler = mediarouter.router(myprocessor(), mediarouter.config(**test_config))
 ```
 
 ```python
-class myProcessor(MediaRouter.Processor):
+class myprocessor(mediarouter.processor):
     def __init__(self):
         super().__init__()
 
@@ -54,7 +54,7 @@ class myProcessor(MediaRouter.Processor):
 ```
 
 ```python
-class myProcessor(MediaRouter.Processor):
+class myprocessor(mediarouter.processor):
     def __init__(self):
         super().__init__()
 

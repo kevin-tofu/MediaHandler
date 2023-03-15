@@ -1,2 +1,2 @@
-from mediarouter.mediarouter import Config, Processor, Router
-__all__ = ["Config", "Processor", "Router"]
+from mediarouter.mediarouter import config, processor, router
+__all__ = ["config", "processor", "router"]

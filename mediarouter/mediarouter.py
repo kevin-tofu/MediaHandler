@@ -17,7 +17,7 @@ print('__name__', __name__)
 from mediarouter import tools
 
 
-class Config():
+class config():
     def __init__(self, **kwargs):
 
         print("kwargs: ", kwargs)
@@ -28,7 +28,7 @@ class Config():
         # self.sleep_sec_remove_response = _config.SLEEP_SEC_REMOVE_RESPONSE
 
 
-class Processor():
+class processor():
 
     def __init__(self, **kwargs):
         pass
@@ -64,11 +64,11 @@ class Processor():
         raise NotImplementedError()
 
 
-class Router():
+class router():
     def __init__(
         self, \
-        processor: Processor, \
-        config: Config
+        processor: processor, \
+        config: config
     ):
 
         self.processor = processor

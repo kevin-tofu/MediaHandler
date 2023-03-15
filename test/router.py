@@ -17,7 +17,7 @@ import cv2
 import numpy as np
 
 
-class myProcessor(mediarouter.Processor):
+class myProcessor(mediarouter.processor):
     def __init__(self):
         super().__init__()
 
@@ -77,7 +77,7 @@ test_config = dict(
     PATH_DATA = "./temp"
 )
 
-handler = mediarouter.Router(myProcessor(), mediarouter.Config(**test_config))
+handler = mediarouter.router(myProcessor(), mediarouter.config(**test_config))
 test_router = APIRouter(prefix="")
 
 @test_router.post('/image')
