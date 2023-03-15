@@ -8,15 +8,16 @@ from typing import List, Optional, Union
 
 from PIL import Image
 
-print(f"{os.pardir}/MediaRouter")
-sys.path.append(f"{os.pardir}/MediaRouter/")
+# print(f"{os.pardir}/mediarouter")
+# sys.path.append(f"{os.pardir}/mediarouter/")
+# print(sys.path)
 
-import MediaRouter
+import mediarouter
 import cv2
 import numpy as np
 
 
-class myProcessor(MediaRouter.Processor):
+class myProcessor(mediarouter.Processor):
     def __init__(self):
         super().__init__()
 
@@ -76,7 +77,7 @@ test_config = dict(
     PATH_DATA = "./temp"
 )
 
-handler = MediaRouter.Router(myProcessor(), MediaRouter.Config(**test_config))
+handler = mediarouter.Router(myProcessor(), mediarouter.Config(**test_config))
 test_router = APIRouter(prefix="")
 
 @test_router.post('/image')

@@ -1,5 +1,5 @@
 import os, sys
-sys.path.append(f"{os.pardir}/MediaRouter/")
+sys.path.append(f"{os.pardir}/mediarouter/")
 
 from fastapi import FastAPI
 # from fastapi.middleware.cors import CORSMiddleware
