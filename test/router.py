@@ -1,4 +1,5 @@
 import os, sys
+
 import io
 from fastapi import APIRouter, File, UploadFile, Header, Depends
 from fastapi import BackgroundTasks
@@ -6,7 +7,9 @@ from fastapi import Response
 from typing import List, Optional, Union
 
 from PIL import Image
-sys.path.append(f"{os.pardir}/MediaRouter")
+
+print(f"{os.pardir}/MediaRouter")
+sys.path.append(f"{os.pardir}/MediaRouter/")
 
 import MediaRouter
 import cv2
@@ -17,21 +20,23 @@ class myProcessor(MediaRouter.Processor):
     def __init__(self):
         super().__init__()
 
-    async def post_files_process(self, \
-                   process_name: str, \
-                   fpath_files: List[str], \
-                   fpath_dst: Optional[str] = None, \
-                   **kwargs
+    async def post_files_process(
+        self,
+        process_name: str,
+        fpath_files: List[str],
+        fpath_dst: Optional[str] = None,
+        **kwargs
     ) -> dict:
         if process_name == "files":
             return dict(status = "OK")
 
 
-    async def post_file_process(self, \
-                             process_name: str, \
-                             fpath_org: str, \
-                             fpath_dst: Optional[str] = None, \
-                             **kwargs
+    async def post_file_process(
+        self,
+        process_name: str,
+        fpath_org: str,
+        fpath_dst: Optional[str] = None,
+        **kwargs
     ) -> dict:
         
         if process_name == "image":
@@ -45,12 +50,14 @@ class myProcessor(MediaRouter.Processor):
         elif process_name == "zip":
             return dict(status = "OK")
     
-    async def post_BytesIO_process(self, \
-                                process_name :str, \
-                                fBytesIO: io.BytesIO, \
-                                fname_org: str,\
-                                extension: str = 'jpg',\
-                                **kwargs):
+    async def post_BytesIO_process(
+        self,
+        process_name :str,
+        fBytesIO: io.BytesIO,
+        fname_org: str,\
+        extension: str = 'jpg',\
+        **kwargs
+    ):
 
         img_pil = Image.open(fBytesIO)
         img_np = np.asarray(img_pil)
@@ -61,7 +68,7 @@ class myProcessor(MediaRouter.Processor):
         img_np = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
         _, img_np = cv2.imencode(f'.{extension}', img_np)
         # print(img_np.shape) # (h*w*3)
-        return Response(content = img_np.tostring(), \
+        return Response(content = img_np.tostring(),
                         media_type = f'image/{extension}'
         )
 
@@ -73,9 +80,11 @@ handler = MediaRouter.Router(myProcessor(), MediaRouter.Config(**test_config))
 test_router = APIRouter(prefix="")
 
 @test_router.post('/image')
-async def image(file: UploadFile = File(...), \
-                bgtask: BackgroundTasks = BackgroundTasks(),\
-                test: Optional[int] = 0):
+async def image(
+    file: UploadFile = File(...),
+    bgtask: BackgroundTasks = BackgroundTasks(),\
+    test: Optional[int] = 0
+):
     
     params = dict(
         test = test
@@ -85,26 +94,30 @@ async def image(file: UploadFile = File(...), \
 
 
 @test_router.post('/image-bytesio')
-async def image(file: UploadFile = File(...), \
-                extension: str = 'jpg', \
-                bgtask: BackgroundTasks = BackgroundTasks(),\
-                test: Optional[int] = 0):
+async def image(
+    file: UploadFile = File(...),
+    extension: str = 'jpg',
+    bgtask: BackgroundTasks = BackgroundTasks(),\
+    test: Optional[int] = 0
+):
     
     params = dict(
-        extension=extension, \
+        extension=extension,
         test = test
     )
     print(file.filename)
-    return await handler.post_file_BytesIO("image-bytesio", \
-                                           file, \
-                                           bgtask, \
+    return await handler.post_file_BytesIO("image-bytesio",
+                                           file,
+                                           bgtask,
                                            **params)
 
 
 @test_router.post('/video')
-async def video(file: UploadFile = File(...), \
-                bgtask: BackgroundTasks = BackgroundTasks(),\
-                test: Optional[int] = 0):
+async def video(
+    file: UploadFile = File(...),
+    bgtask: BackgroundTasks = BackgroundTasks(),\
+    test: Optional[int] = 0
+):
     """
     """
 
@@ -115,9 +128,11 @@ async def video(file: UploadFile = File(...), \
 
 
 @test_router.post('/zip')
-async def zip(file: UploadFile = File(...), \
-              bgtask: BackgroundTasks = BackgroundTasks(),\
-              test: Optional[int] = 0):
+async def zip(
+    file: UploadFile = File(...),
+    bgtask: BackgroundTasks = BackgroundTasks(),\
+    test: Optional[int] = 0
+):
     """
     """
     params = dict(
@@ -127,9 +142,11 @@ async def zip(file: UploadFile = File(...), \
 
 
 @test_router.post('/files')
-async def files(files: List[UploadFile], \
-                bgtask: BackgroundTasks = BackgroundTasks(),\
-                test: Optional[int] = 0):
+async def files(
+    files: List[UploadFile],
+    bgtask: BackgroundTasks = BackgroundTasks(),\
+    test: Optional[int] = 0
+):
     """
     """
     params = dict(

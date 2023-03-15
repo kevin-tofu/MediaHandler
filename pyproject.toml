@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "mediarouter"
+name = "MediaRouter"
 version = "0.0.2"
 description = "This library provides functions for routing media such as images and videos via FastAPI."
 authors = ["kohei <koheitech001@gmail.com>"]

@@ -1,6 +1,7 @@
 
-
+import sys, os
 from fastapi.testclient import TestClient
+sys.path.append(f"{os.pardir}/MediaRouter/")
 import config
 
 path_data = config.PATH_DATA

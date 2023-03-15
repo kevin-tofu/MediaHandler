@@ -1,7 +1,6 @@
-# import pathlib
-# print(pathlib.Path(__file__).parent)
+import os, sys
+sys.path.append(f"{os.pardir}/MediaRouter/")
 
-import os
 from fastapi import FastAPI
 # from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.cors import CORSMiddleware

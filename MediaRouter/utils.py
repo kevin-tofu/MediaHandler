@@ -1,7 +1,7 @@
 
 def video_conversion(
-    path_file_src: str, \
-    path_file_dst: str, \
+    path_file_src: str,
+    path_file_dst: str,
     test: Optional[Union[None, int]]=None
 ):
     
@@ -22,15 +22,15 @@ def video_conversion_fname(
     fname_dst: str
 ):
 
-    video_conversion(f"{path_data}/{fname_src}", \
+    video_conversion(f"{path_data}/{fname_src}",
                      f"{path_data}/{fname_dst}"
     )
 
 
 
 def video_conversion_xxx2mp4(
-    path_data: str, \
-    fname: str, \
+    path_data: str,
+    fname: str,
     remove_fileorg : bool=True
 ):
 # def converter_xxx2mp4(path_data: str, fname: str):
@@ -50,7 +50,7 @@ def video_conversion_xxx2mp4(
 
 
 def is_same_extension_file(
-    fname1: str, \
+    fname1: str,
     fname2: str
 ):
     """
@@ -71,7 +71,7 @@ def get_extension(fname: str):
     return file_org_ext[1::]
 
 def is_same_extension(
-    fname: str, \
+    fname: str,
     extension: str
 ):
     """
@@ -85,10 +85,12 @@ def is_same_extension(
         return False
 
 
-def video_conversion_xxx2yyy(path_data: str, \
-                             fname: str, \
-                             yyy: str = 'mp4', \
-                             remove_fileorg : bool=True):
+def video_conversion_xxx2yyy(
+    path_data: str,
+    fname: str,
+    yyy: str = 'mp4',
+    remove_fileorg : bool=True
+):
     """
     """
 
@@ -146,17 +148,21 @@ def xxx2mp4(self, path_data: str, fname: str):
     if file_ext == ".mp4" or file_ext == ".MP4":
         return fname
     else:
-        video_conversion_xxx2yyy(path_data, \
-                                 fname, \
-                                 fname_dst, \
-                                 remove_fileorg=True)
+        video_conversion_xxx2yyy(
+            path_data,
+            fname,
+            fname_dst,
+            remove_fileorg=True
+        )
         return fname_dst
 
 
-def save_video(path: str, \
-               fname: str, \
-               file: UploadFile, \
-               test: Optional[Union[None, int]]=None):
+def save_video(
+    path: str,
+    fname: str,
+    file: UploadFile,
+    test: Optional[Union[None, int]]=None
+):
 
     logger.debug("save_video")
     try:
