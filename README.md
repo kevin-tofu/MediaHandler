@@ -32,11 +32,12 @@ class myProcessor(MediaRouter.Processor):
     def __init__(self):
         super().__init__()
 
-    async def main_file(self, \
-                  process_name: str, \
-                  fpath_org: str, \
-                  fpath_dst: str, \
-                  **kwargs
+    async def main_file(
+        self,
+        process_name: str,
+        fpath_org: str,
+        fpath_dst: str,
+        **kwargs
     ):
         
         if process_name == "image":
@@ -57,11 +58,12 @@ class myProcessor(MediaRouter.Processor):
     def __init__(self):
         super().__init__()
 
-    async def main_files(self, \
-                   process_name: str, \
-                   fpath_files: List[str], \
-                   fpath_dst: str, \
-                   **kwargs
+    async def main_files(
+        self,
+        process_name: str,
+        fpath_files: List[str],
+        fpath_dst: str,
+        **kwargs
     ):
         if process_name == "files":
             return dict(status = "OK")
