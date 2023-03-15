@@ -1,10 +1,24 @@
 
 # MediaRouter  
 
+## What this repository is going to solve
+
+This library provides functions for routing media such as images and videos via FastAPI.
+
 ## How to install
 
-```python
-pip install git+https://github.com/kevin-tofu/MediaRouter.git
+### via poetry
+
+```bash
+poetry add git+https://github.com/kevin-tofu/MediaRouter.git
+```
+
+## How to test this module
+
+```bash
+
+poetry run python3 test/test_server.py
+
 ```
 
 ## Usage Example
