@@ -55,8 +55,8 @@ class myProcessor(mediarouter.processor):
         self,
         process_name :str,
         fBytesIO: io.BytesIO,
-        fname_org: str,\
-        extension: str = 'jpg',\
+        fname_org: str,
+        extension: str = 'jpg',
         **kwargs
     ):
 
@@ -69,9 +69,11 @@ class myProcessor(mediarouter.processor):
         img_np = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
         _, img_np = cv2.imencode(f'.{extension}', img_np)
         # print(img_np.shape) # (h*w*3)
-        return Response(content = img_np.tostring(),
-                        media_type = f'image/{extension}'
+        return Response(
+            content = img_np.tostring(),
+            media_type = f'image/{extension}'
         )
+
 
 test_config = dict(
     PATH_DATA = "./temp"

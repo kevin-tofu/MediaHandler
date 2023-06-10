@@ -50,6 +50,30 @@ class myprocessor(mediarouter.processor):
         
         elif process_name == "zip":
             return dict(status = "OK")
+
+
+    async def post_BytesIO_process(
+        self,
+        process_name :str,
+        fBytesIO: io.BytesIO,
+        fname_org: str,
+        extension: str = 'jpg',
+        **kwargs
+    ):
+
+        img_pil = Image.open(fBytesIO)
+        img_np = np.asarray(img_pil)
+        # print(img_np.shape) # (h, w, 3)
+        
+        # do stuff
+
+        img_np = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
+        _, img_np = cv2.imencode(f'.{extension}', img_np)
+        # print(img_np.shape) # (h*w*3)
+        return Response(
+            content = img_np.tostring(),
+            media_type = f'image/{extension}'
+        )
         
 ```
 

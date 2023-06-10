@@ -55,6 +55,7 @@ def test_zip():
     assert res.status_code == 200
     assert type(res.json()) == dict
 
+
 def test_files():
 
     with open(f"{path_data}/{name_zip}", "rb") as file_zip, \
@@ -70,6 +71,7 @@ def test_files():
         print(res.status_code)
         assert res.status_code == 200
         assert type(res.json()) == dict
+
 
 if __name__ == "__main__":
 
