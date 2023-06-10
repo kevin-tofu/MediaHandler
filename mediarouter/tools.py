@@ -34,7 +34,14 @@ def get_file_extension(fname: str):
     extension = os.path.splitext(fname)[-1][1::]
     return extension
 
-def get_mediatype(fpath: str):
+
+def get_mediatype(
+    fpath: str,
+    extensions_image: Tuple[str] = extensions_image_base,
+    extensions_video: Tuple[str] = extensions_video_base,
+    extensions_json: Tuple[str] = ("json"),
+    extensions_zip: Tuple[str] = ("zip")
+):
     ext = get_file_extension(fpath)
     if ext in extensions_image:
         return f"image/{ext}"
@@ -48,11 +55,13 @@ def get_mediatype(fpath: str):
         return FileType.SOMETHINGELSE
 
 
-def check_filetype(fpath: str, \
-                   extensions_image: Tuple[str] = extensions_image_base,\
-                   extensions_video: Tuple[str] = extensions_video_base, \
-                   extensions_json: Tuple[str] = ("json"), \
-                   extensions_zip: Tuple[str] = ("zip")):
+def check_filetype(
+    fpath: str,
+    extensions_image: Tuple[str] = extensions_image_base,
+    extensions_video: Tuple[str] = extensions_video_base,
+    extensions_json: Tuple[str] = ("json"),
+    extensions_zip: Tuple[str] = ("zip")
+):
     
     ext = get_file_extension(fpath)
     if ext in extensions_image:
@@ -66,31 +75,40 @@ def check_filetype(fpath: str, \
     else:
         return FileType.SOMETHINGELSE
 
+
 def error_handling_ext(ext_i: str, allowed_extensions: Tuple[str]):
     # extention_zip = ext_i.lower() in allowed_extensions
     if not ext_i.lower() in allowed_extensions:
         raise HTTPException(status_code=400, detail="The file is NOT {}".format(allowed_extensions))
 
+
 def error_handling_zip_fpath(fpath: str, allowed_extensions: Tuple[str] = ('zip')):
     error_handling_ext(get_file_extension(fpath), allowed_extensions)
+
 
 def error_handling_image_fpath(fpath: str, allowed_extensions: Tuple[str] = ('jpg', 'jpeg', 'png', 'tiff')):
     error_handling_ext(get_file_extension(fpath), allowed_extensions)
 
+
 def error_handling_image_json(fpath: str, allowed_extensions: Tuple[str] = ('json')):
     error_handling_ext(get_file_extension(fpath), allowed_extensions)
+
 
 def error_handling_zip(file: UploadFile, allowed_extensions: Tuple[str] = ('zip')):
     error_handling_ext(file.filename.split('.')[-1], allowed_extensions)
 
+
 def error_handling_image(file: UploadFile, allowed_extensions: Tuple[str] = ('jpg', 'jpeg', 'png', 'tiff')):
     error_handling_ext(file.filename.split('.')[-1], allowed_extensions)
+
 
 def error_handling_video(file: UploadFile, allowed_extensions: Tuple[str] = ('mp4', 'avi', 'mov', 'wmv', 'webm')):
     error_handling_ext(file.filename.split('.')[-1], allowed_extensions)
 
+
 def error_handling_json(file: UploadFile, allowed_extensions: Tuple[str] = ('json')):
     error_handling_ext(file.filename.split('.')[-1], allowed_extensions)
+
 
 def fname2uuid(fname: str):
 
@@ -100,12 +118,14 @@ def fname2uuid(fname: str):
 
     return fname_uuid, myuuid
 
+
 def make_fname_uuid(ext: str):
 
     myuuid = str(uuid.uuid4())
     fname_uuid = f"{myuuid}.{ext}"
 
     return fname_uuid, make_fname_uuid
+
 
 def addstr2fname(fname: str, addstr: str, ext = Optional[str]):
 
@@ -122,12 +142,12 @@ def addstr2fname(fname: str, addstr: str, ext = Optional[str]):
     return fname_ret
 
 
-
 def remove_dir(path_dir: str, sleep_sec: int=5) -> None:
     time.sleep(sleep_sec)
     if os.path.exists(path_dir) == True:
         shutil.rmtree(path_dir)
         logger.info(f'removed : {path_dir}')
+
 
 def remove_file(path_file: str, sleep_sec: int=5) -> None:
 
@@ -136,6 +156,7 @@ def remove_file(path_file: str, sleep_sec: int=5) -> None:
     if os.path.exists(path_file) == True:
         os.unlink(path_file)
         logger.info(f'removed : {path_file}')
+
 
 def remove_files(path_files: str, sleep_sec: int=5) -> None:
 
@@ -146,15 +167,17 @@ def remove_files(path_files: str, sleep_sec: int=5) -> None:
             os.unlink(path_file)
             logger.info(f'removed : {path_file}')
 
+
 async def read_image(file) -> Image.Image:
 
     logger.debug("read_imagefile")
     image = Image.open(BytesIO(await file.read()))
     return np.asarray(image)
 
+
 async def save_image(
-    _path: str, \
-    _fname: str, \
+    _path: str,
+    _fname: str,
     file: UploadFile, 
     test: Optional[Union[None, int]]=None
 ):
@@ -166,10 +189,11 @@ async def save_image(
     except:
         raise HTTPException(status_code=400, detail='File Definition Error')
 
+
 async def read_save_image(
-    _path: str, \
-    _fname: str, \
-    _file: UploadFile, \
+    _path: str,
+    _fname: str,
+    _file: UploadFile,
     test: Optional[Union[None, int]]=None
 ):
     
@@ -186,9 +210,9 @@ async def read_save_image(
 
 
 def save_file(
-    path: str, \
-    fname: str, \
-    file: UploadFile, \
+    path: str,
+    fname: str,
+    file: UploadFile,
     test: Optional[Union[None, int]]=None
 ):
 

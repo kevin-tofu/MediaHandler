@@ -1,3 +1,10 @@
+import os
+from typing import Optional, Union
+from mediarouter.logconf import medialogger
+logger = medialogger(__name__)
+print('__name__', __name__)
+from fastapi import HTTPException
+
 
 def video_conversion(
     path_file_src: str,
@@ -22,10 +29,10 @@ def video_conversion_fname(
     fname_dst: str
 ):
 
-    video_conversion(f"{path_data}/{fname_src}",
-                     f"{path_data}/{fname_dst}"
+    video_conversion(
+        f"{path_data}/{fname_src}",
+        f"{path_data}/{fname_dst}"
     )
-
 
 
 def video_conversion_xxx2mp4(

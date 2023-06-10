@@ -34,31 +34,31 @@ class processor():
         pass
     
     async def post_files_process(
-        self, \
-        process_name: str, \
-        fpath_files: List[str], \
-        fpath_dst: Optional[str] = None, \
-        bgtask: BackgroundTasks=BackgroundTasks(), \
+        self,
+        process_name: str,
+        fpath_files: List[str],
+        fpath_dst: Optional[str] = None,
+        bgtask: BackgroundTasks=BackgroundTasks(),
         **kwargs
     ):
         raise NotImplementedError()
 
     async def post_file_process(
-        self, \
-        process_name: str, \
-        fpath_org: str, \
-        fpath_dst: Optional[str] = None, \
-        bgtask: BackgroundTasks=BackgroundTasks(), \
+        self,
+        process_name: str,
+        fpath_org: str,
+        fpath_dst: Optional[str] = None,
+        bgtask: BackgroundTasks=BackgroundTasks(),
         **kwargs
     ):
 
         raise NotImplementedError()
 
     async def post_BytesIO_process(
-        self, \
-        process_name: str, \
-        fBytesIO: io.BytesIO, \
-        fname_org: str, \
+        self,
+        process_name: str,
+        fBytesIO: io.BytesIO,
+        fname_org: str,
         **kwargs
     ):
         raise NotImplementedError()
@@ -66,8 +66,8 @@ class processor():
 
 class router():
     def __init__(
-        self, \
-        processor: processor, \
+        self,
+        processor: processor,
         config: config
     ):
 
@@ -95,32 +95,32 @@ class router():
             img = cv2.imread(fpath_dst)
             _, img = cv2.imencode(f'.{ext}', img)
             return Response(
-                img.tostring(), \
-                media_type = f'image/{ext}', \
+                img.tostring(),
+                media_type = f'image/{ext}',
                 # filename=fname
                 # background=bgtask
             )
         
             # _, image_enc = cv2.imencode(f'.{ext}', img)
             
-            # return Response(content = image_enc.tostring(), \
-            #                 media_type = f'image/{ext}', \
+            # return Response(content = image_enc.tostring(),
+            #                 media_type = f'image/{ext}',
             #                 background=bgtask
             # )
         else:
             return FileResponse(
-                fpath_dst, \
-                filename=f"{fname}", \
+                fpath_dst,
+                filename=f"{fname}",
                 media_type = f'video/{ext}'
                 # background=bgtask
             )
 
     async def post_files(
-        self, \
-        process_name: str, \
-        files_list: List[UploadFile], \
-        retfile_extension: Optional[str] = None, \
-        bgtask: BackgroundTasks = BackgroundTasks(),\
+        self,
+        process_name: str,
+        files_list: List[UploadFile],
+        retfile_extension: Optional[str] = None,
+        bgtask: BackgroundTasks = BackgroundTasks(),
         **kwargs
     ):
 
@@ -158,9 +158,9 @@ class router():
 
 
             result = await self.processor.post_files_process(
-                process_name, \
-                path_files_list, \
-                fpath_dst, \
+                process_name,
+                path_files_list,
+                fpath_dst,
                 **kwargs
             )
             
@@ -190,11 +190,11 @@ class router():
         bgtask.add_task(tools.remove_dir, path_dir_export)
 
     async def post_file(
-        self, \
-        process_name: str, \
-        file: UploadFile, \
-        retfile_extension: Optional[str] = None, \
-        bgtask: BackgroundTasks = BackgroundTasks(),\
+        self,
+        process_name: str,
+        file: UploadFile,
+        retfile_extension: Optional[str] = None,
+        bgtask: BackgroundTasks = BackgroundTasks(),
         **kwargs
     ):
 
@@ -223,9 +223,9 @@ class router():
                 fpath_dst = None
 
             result = await self.processor.post_file_process(
-                process_name, \
-                f"{self.path_data}/{fname}", \
-                fpath_dst, \
+                process_name,
+                f"{self.path_data}/{fname}",
+                fpath_dst,
                 **kwargs
             )
             
@@ -247,10 +247,10 @@ class router():
         
 
     async def post_file_BytesIO(
-        self, \
-        process_name: str, \
-        file: UploadFile, \
-        bgtask: BackgroundTasks = BackgroundTasks(),\
+        self,
+        process_name: str,
+        file: UploadFile,
+        bgtask: BackgroundTasks = BackgroundTasks(),
         **kwargs
     ):
 
