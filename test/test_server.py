@@ -39,6 +39,13 @@ def test_image():
     assert res.status_code == 200
     # assert type(res.json()) == dict
 
+
+    with open(f"{path_data}/{name_image}", "rb") as _file:
+        res = testclient.post("/image-bytesio?test=1", files={"file": (f"_{name_image}", _file, "image/png")})
+    print(res.status_code)
+    assert res.status_code == 200
+
+
     # with open(f"{path_data}/{name_zip}", "rb") as _file:
     #     res = testclient.post("/image/?test=1", files={"file": (name_zip, _file, "image/png")})
     # print(res)

@@ -50,7 +50,8 @@ class myProcessor(mediarouter.processor):
         
         elif process_name == "zip":
             return dict(status = "OK")
-    
+
+
     async def post_BytesIO_process(
         self,
         process_name :str,
@@ -109,10 +110,12 @@ async def image(
         test = test
     )
     print(file.filename)
-    return await handler.post_file_BytesIO("image-bytesio",
-                                           file,
-                                           bgtask,
-                                           **params)
+    return await handler.post_file_BytesIO(
+        "image-bytesio",
+        file,
+        bgtask,
+        **params
+    )
 
 
 @test_router.post('/video')
