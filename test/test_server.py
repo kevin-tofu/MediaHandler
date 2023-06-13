@@ -80,6 +80,12 @@ def test_files():
         assert type(res.json()) == dict
 
 
+        res = testclient.post("/files-bytesio?test=1", files=files)
+        print(res.status_code)
+        assert res.status_code == 200
+        assert type(res.json()) == dict
+
+
 if __name__ == "__main__":
 
     test_read_main()

@@ -43,6 +43,7 @@ class processor():
     ):
         raise NotImplementedError()
 
+
     async def post_file_process(
         self,
         process_name: str,
@@ -54,11 +55,21 @@ class processor():
 
         raise NotImplementedError()
 
+
     async def post_BytesIO_process(
         self,
         process_name: str,
         fBytesIO: io.BytesIO,
         fname_org: str,
+        **kwargs
+    ):
+        raise NotImplementedError()
+
+
+    async def post_ListBytesIO_process(
+        self,
+        process_name: str,
+        BytesIO_list: List[io.BytesIO],
         **kwargs
     ):
         raise NotImplementedError()
@@ -281,9 +292,68 @@ class router():
                 ftype_input = tools.check_filetype(fname_org)
 
                 result = await self.processor.post_BytesIO_process(
-                    process_name, \
-                    file_byte, \
-                    fname_org, \
+                    process_name,
+                    file_byte,
+                    fname_org,
+                    **kwargs
+                )
+                return result
+                
+            # try:
+            #     pass
+            except:
+                raise HTTPException(status_code=503, detail="Error") 
+            finally:
+                # print("finally0")
+                pass
+
+        
+    async def post_files_BytesIO(
+        self,
+        process_name: str,
+        files: List[UploadFile],
+        **kwargs
+    ):
+
+        logger.info("post_files_BytesIO")
+        
+        test = kwargs["test"]
+        files_list = list()
+        if test == 1:
+            
+            for file in files:
+                fname_org = file.filename
+                file_byte = io.BytesIO(await file.read())
+                files_list.append(
+                    dict(
+                        filename=fname_org,
+                        bytesio=file_byte
+                    )
+                )
+
+            result = await self.processor.post_ListBytesIO_process(
+                process_name,
+                files_list,
+                **kwargs
+            )
+            return result
+        else:
+            try:
+            # if True:
+                
+                for file in files:
+                    fname_org = file.filename
+                    file_byte = io.BytesIO(await file.read())
+                    files_list.append(
+                        dict(
+                            fname=fname_org,
+                            bytesio=file_byte
+                        )
+                    )
+
+                result = await self.processor.post_ListBytesIO_process(
+                    process_name,
+                    files_list,
                     **kwargs
                 )
                 return result

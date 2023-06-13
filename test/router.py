@@ -76,6 +76,24 @@ class myProcessor(mediarouter.processor):
         )
 
 
+    async def post_ListBytesIO_process(
+        self,
+        process_name :str,
+        BytesIO_list: List[io.BytesIO],
+        **kwargs
+    ):
+        ret = list()
+        for data in BytesIO_list:
+            # data['bytesio'] # 
+            ret.append(
+                dict(filename=data['filename'])
+            )
+
+
+        return dict(info=ret)
+
+
+
 test_config = dict(
     PATH_DATA = "./temp"
 )
@@ -136,7 +154,7 @@ async def video(
 @test_router.post('/zip')
 async def zip(
     file: UploadFile = File(...),
-    bgtask: BackgroundTasks = BackgroundTasks(),\
+    bgtask: BackgroundTasks = BackgroundTasks(),
     test: Optional[int] = 0
 ):
     """
@@ -150,7 +168,7 @@ async def zip(
 @test_router.post('/files')
 async def files(
     files: List[UploadFile],
-    bgtask: BackgroundTasks = BackgroundTasks(),\
+    bgtask: BackgroundTasks = BackgroundTasks(),
     test: Optional[int] = 0
 ):
     """
@@ -161,4 +179,20 @@ async def files(
     # print(params)
 
     return await handler.post_files("files", files, "json", bgtask, **params)
+
+
+@test_router.post('/files-bytesio')
+async def files(
+    files: List[UploadFile],
+    test: Optional[int] = 0
+):
+    """
+    """
+    params = dict(
+        test = test
+    )
+    # print(params)
+
+    # return await handler.post_files("files", files, "json", bgtask, **params)
+    return await handler.post_files_BytesIO("files", files, **params)
 
